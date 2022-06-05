@@ -1,0 +1,30 @@
+function [opts,M] = getParameters(filename,type)
+
+opts = detectImportOptions(filename);
+preview(filename,opts)
+M = readmatrix(filename,opts);
+
+switch type
+    case "targets"
+        target = struct;
+        target.pos = M(:,2);
+        target.vel = M(:,3);
+        target.rcs = M(:,4);
+        M = target;
+    case "radar"
+        radar = struct;
+        radar.duty = M(:,1);
+        radar.fc = M(:,2);
+        radar.pri = M(:,3);
+        radar.fs = M(:,4);
+        radar.wb = M(:,5);
+        radar.nPulses = M(:,6);
+        radar.nDoppler = M(:,7);
+        radar.peakPwr = M(:,8);
+        radar.txGain = M(:,9);
+        radar.txGain = M(:,10);
+        M = radar;
+    case "drfm"
+end
+
+end
