@@ -10,15 +10,20 @@
 % the sample rate is 150 MHz.
 
 clear
+path = 'C:\Users\friedele\Repos\DRFM';
+
+tgtFile = fullfile(path,'inputs','targets.xlsx');
+radarFile = fullfile(path,'inputs','radar.xlsx');
 
 % Get the simulation inputs
-[targetOpt,target] = getParameters('C:\Users\friedele\Repos\DRFM\inputs\targets.xlsx',"targets");
-[radarOpt,radar] = getParameters('C:\Users\friedele\Repos\DRFM\inputs\radar.xlsx',"radar");
+[targetOpt,tgt] = getParameters(tgtFile,"targets");
+[radarOpt,radar] = getParameters(radarFile,"radar");
 
 c = physconst('LightSpeed');
 fs = radar.fs;
 fc = radar.fc;
 duty = radar.duty;
+pw = radar.pw;
 pri = radar.pri;
 prf = radar.prf;
 wbBeamforming = radar.wb;
@@ -32,13 +37,12 @@ nDoppler = radar.nDoppler;
 % 20, and 40 m/s. All three targets have a nonfluctuating radar cross-section 
 % (RCS) of 10 dB. Create the target and radar platforms.
 
-Numtgts = size(target.pos,1);
+Numtgts = size(tgt.pos,1);
 tgtPos = zeros(3,Numtgts);
-%tgtpos(1,:) = [500 530 750];
-tgtPos(1,:) = target.pos; % Short ranges
+tgtPos(1,:) = tgt.pos; % Short ranges
 tgtVel = zeros(3,Numtgts);
-tgtVel(1,:) = target.vel; % km/sec
-tgtrcs = db2pow(10)*target.rcs';
+tgtVel(1,:) = tgt.vel; % km/sec
+tgtrcs = db2pow(10)*tgt.rcs';
 tgtmotion = phased.Platform(tgtPos,tgtVel);
 target = phased.RadarTarget('PropagationSpeed',c,'OperatingFrequency',fc, ...
     'MeanRCS',tgtrcs);
@@ -50,11 +54,26 @@ radarmotion = phased.Platform(radarpos,radarvel);
 %% 
 % Create the transmitter and receiver antennas.
 
-nRowElements = 10;
-nColElements = 30;
-txArray = phased.URA('Size',[nRowElements nColElements],'Lattice','Triangular','Taper',2);
+nRowElements = 25;
+nColElements = 25;
+% txArray = phased.URA('Size',[nRowElements nColElements],'Lattice','Triangular','Taper',0.25);
 %viewArray(txArray)
-nElements = getNumElements(txArray);
+%nElements = getNumElements(txArray);
+
+freqVector  = [8 10].*1e9;
+[pattern_phitheta,phi,theta] = helperPatternImport;
+antenna = phased.CustomAntennaElement('FrequencyVector',freqVector, ...
+                              'PatternCoordinateSystem','phi-theta',...
+                              'PhiAngles',phi,...
+                              'ThetaAngles',theta,...
+                              'MagnitudePattern',pattern_phitheta,...
+                              'PhasePattern',zeros(size(pattern_phitheta)));
+fmax = freqVector(end);
+lambda = c/fmax;
+txArray = phased.URA('Element',antenna,'Size',10,'ElementSpacing',lambda/2, 'Lattice','Triangular');
+% pattern(txArray,fmax,-1:0.01:1,0,'PropagationSpeed',c, ...
+%     'CoordinateSystem','UV','Type','powerdb')
+axis([-1 1 -50 0]);
 rxArray = clone(txArray);
 %% 
 % Set up the transmitter-end signal processing. Create an upsweep linear FM 
@@ -62,9 +81,8 @@ rxArray = clone(txArray);
 % PRI in samples and then estimate the rms bandwidth and range resolution.
 
 bw = fs/2;
-waveform = phased.LinearFMWaveform('PulseWidth', SampleRate',fs, ...
-    'PRF',prf,'OutputFormat','Pulses','NumPulses',1,'SweepBandwidth',fs/2, ...
-    'DurationSpecification','Duty cycle','DutyCycle',duty); % Increase duty for higher SNR
+waveform = phased.LinearFMWaveform('PulseWidth', pw,'SampleRate',fs, ...
+    'PRF',prf,'OutputFormat','Pulses','NumPulses',1,'SweepBandwidth',fs/2);
 sig = waveform();
 nSamples = length(sig);
 bwrms = bandwidth(waveform)/sqrt(12);
@@ -133,7 +151,6 @@ datacube = complex(zeros(nSamples,nPulses));
 % as the target passes through the mainlobe.
 
 tgtAng = [0;0];
-
 if (wbBeamforming)
     beamformer = phased.TimeDelayBeamformer('SensorArray',rxArray,...
         'DirectionSource','Property','Direction',tgtAng,...
@@ -145,10 +162,12 @@ else
         'WeightsNormalization','Preserve power', 'WeightsOutputPort',false);
 end
 
-% Setup to add noise
+% Setup to add noise and window the signal
 t = (0:nSamples-1)';
 fsignal = 0.01;
 x = sin(2*pi*fsignal*t);
+tWin = taylorwin(nSamples,4,-40);
+scaleFactor = 2;
 %% Loop through the integrated number of pulses
 
 for n = 1:nPulses
@@ -160,9 +179,10 @@ for n = 1:nPulses
     txsig = radiator(txsig,tgtAng);
     txsig = channel(txsig,sensorpos,tgtPos,sensorvel,tgtVel);    
     tgtsig = target(txsig);   
-    wavcoll = collectPlaneWave(rxArray,tgtsig,tgtAng,fc);
+    rxCollect = collectPlaneWave(rxArray,tgtsig,tgtAng,fc);
     noise = 1e-3*(randn(size(x)) + 1i*randn(size(x)));
-    noiseSig = wavcoll+noise;
+    sigWin = rxCollect.*tWin;
+    noiseSig = sigWin+noise;
     rxBf = beamformer(noiseSig);
     datacube(:,n) = rxBf;
 end
@@ -178,7 +198,6 @@ end
 % shows range vertically and speed horizontally. Use the linear FM waveform for 
 % match filtering. The image is here is the range-Doppler map.
 
-figure
 %Create a range-Doppler response object.
 rangedopresp = phased.RangeDopplerResponse('SampleRate',fs, ...
     'PropagationSpeed',c,'DopplerFFTLengthSource','Property', ...
@@ -187,12 +206,17 @@ rangedopresp = phased.RangeDopplerResponse('SampleRate',fs, ...
 matchingcoeff = getMatchedFilter(waveform);
 [rngdopresp,rnggrid,dopgrid] = rangedopresp(datacube,matchingcoeff);
 
-imagesc(dopgrid,rnggrid,10*log10(abs(rngdopresp)))
-xlabel('Closing Speed (m/s)')
-ylabel('Range (m)')
-colorbar
-%ylim([0 800])
+im = imagesc(dopgrid,rnggrid,10*log10(abs(rngdopresp)));
+set(gca,'XTick',[], 'YTick', [])
+% xlabel('Closing Speed (m/s)')
+% ylabel('Range (m)')
+%colorbar
+ylim([0 max(tgt.pos)+1e4])
 axis xy
+
+% Write the file image output
+rdFile = fullfile(path,'images','rd');
+saveas(gcf,rdFile,'png')
 
 %% 
 % Because the targets lie along the positive _x_-axis, positive velocity in 
