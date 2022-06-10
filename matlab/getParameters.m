@@ -26,6 +26,7 @@ switch type
         radar.peakPwr = M(:,11);
         radar.txGain = M(:,12);
         radar.rxGain = M(:,13);
+        radar.noiseFigure = M(:,14);
         M = radar;
     case "drfm"
 end

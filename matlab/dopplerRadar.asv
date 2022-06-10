@@ -234,14 +234,19 @@ set(gca,'XTick',[], 'YTick', [])
 
 fprintf('Using PW%d\n',pwNum)
 
+
 % Write the file image output
 rdFile = fullfile(path,'images','rd');
 saveas(gcf,rdFile,'png')
+imfinfo("rd.png")
 img = im2double(imread('rd.png'));
-grayImage = rgb2gray(img);
-J = imresize(grayImage,'OutputSize',[64,64]);  % Should I use a down sampling technique?
-imshow(J)
-saveas(gcf,rdFile,'png')
+% conv_mat = ones(2) / 4;
+% img_low = convn(img,conv_mat,'same');
+% img_low = img_low(2:12:end,2:10:end);
+% 
+% figure, imshow(img), title('Original');
+% figure, imshow(img_low), title('Low Resolution')
+J = imresize(img,0.4,'nearest');
 
 %% 
 % Because the targets lie along the positive _x_-axis, positive velocity in 
