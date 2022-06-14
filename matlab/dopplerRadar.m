@@ -28,6 +28,13 @@ nPulses = radar.nPulses(pwNum);
 nDoppler = radar.nDoppler(pwNum);
 noiseFigure = radar.noiseFigure(pwNum);
 
+% Beamformer Values
+cbf = DARCCentralBeamformer;
+cbf.PRF = prf;
+cbf.fs = fs;
+cbf.fCenter = fc;
+cbf.noiseFig = noiseFigure;
+
 %% 
 % Set up the scenario parameters. The transmitter and receiver are stationary 
 % and located at the origin. The targets are 500, 530, and 750 meters from the 
@@ -37,9 +44,14 @@ noiseFigure = radar.noiseFigure(pwNum);
 
 Numtgts = size(tgt.pos,1);
 tgtPos = zeros(3,Numtgts);
-tgtPos(1,:) = tgt.pos; % Short ranges
 tgtVel = zeros(3,Numtgts);
-tgtVel(1,:) = tgt.vel; % km/sec
+
+%tgtPos(1,:) = tgt.pos; % km
+tgtPos(1,:) = [1000e3 2000e3 3000e3];
+initTgtPos = tgtPos(1,:);
+%tgtVel(1,:) = tgt.vel; % km/sec
+tgtVel(1,:) = [1000 0 0];  % Shifted in range order of magnitude for each increment in velocity 
+% (10m/s = 3 km range, 100 m/s = 30 km, 1000 m/s = 300 km)
 tgtrcs = db2pow(10)*tgt.rcs';
 tgtmotion = phased.Platform(tgtPos,tgtVel);
 target = phased.RadarTarget('PropagationSpeed',c,'OperatingFrequency',fc, ...
@@ -70,7 +82,7 @@ lambda = c/fmax;
 txArray = phased.URA('Element',antenna,'Size',nElements,'ElementSpacing',lambda/2, 'Lattice','Triangular');
 % pattern(txArray,fmax,-1:0.01:1,0,'PropagationSpeed',c, ...
 %     'CoordinateSystem','UV','Type','powerdb')
-axis([-1 1 -50 0]);
+%axis([-1 1 -50 0]);
 rxArray = clone(txArray);
 %% 
 % Set up the transmitter-end signal processing. Create an upsweep linear FM 
@@ -162,7 +174,6 @@ x = sin(2*pi*fsignal*t);
 tWin = taylorwin(nSamples,4,-40);
 scaleFactor = 2;
 %% Loop through the integrated number of pulses
-
 for n = 1:nPulses
     [sensorpos,sensorvel] = radarmotion(dt);
     [tgtPos,tgtVel] = tgtmotion(dt);
@@ -180,30 +191,32 @@ for n = 1:nPulses
     datacube(:,n) = rxBf;
 end
 
+fprintf ('True Target Range (km) (x-axis): %.1f\t %.1f\t %.1f\t\n',tgtPos(1,1)/1e3, tgtPos(1,2)/1e3, tgtPos(1,3)/1e3);
+fprintf ('Overall Range Shift (km) (x-axis): %.1f\t %.1f\t %.1f\t\n',abs(tgtPos(1,1)/1e3-initTgtPos(1,1)/1e3),...
+    abs(tgtPos(1,2)/1e3-initTgtPos(1,2)/1e3), abs(tgtPos(1,3)/1e3-initTgtPos(1,3)/1e3));
 % Determine the range bins
-fasttime = unigrid(0,1/fs,1/prf,'[)');
-rangebins = (physconst('LightSpeed')*fasttime)/2;
-
-probfa = 1e-9;
-NoiseBandwidth = 5e6/2;
-npower = noisepow(NoiseBandwidth,...
-    receiver.NoiseFigure,receiver.ReferenceTemperature);
-thresh = npwgnthresh(probfa,nPulses,'noncoherent');
-thresh = sqrt(npower*db2pow(thresh));
-[pks,range_detect] = findpeaks(pulsint(datacube,'noncoherent'),...
-    'MinPeakHeight',thresh,'SortStr','descend');
-range_estimate = rangebins(range_detect(2));
-
-ts = datacube(range_detect(1),:).';
-[Pxx,F] = periodogram(ts,[],256,prf,'centered');
-plot(F,10*log10(Pxx))
-
-[Y,I] = max(Pxx);
-lambda = physconst('LightSpeed')/1e9;
-tgtspeed = dop2speed(F(I)/2,lambda);
-fprintf('Estimated range of the target is %4.2f km.\n',...
-    range_estimate/1e3)
-fprintf('Estimated target speed is %3.1f m/sec.\n',tgtspeed)
+% fasttime = unigrid(0,1/fs,1/prf,'[)');
+% rangebins = (physconst('LightSpeed')*fasttime)/2;
+% 
+% probfa = 1e-9;
+% NoiseBandwidth = 5e6/2;
+% npower = noisepow(NoiseBandwidth,...
+%     receiver.NoiseFigure,receiver.ReferenceTemperature);
+% thresh = npwgnthresh(probfa,nPulses,'noncoherent');
+% thresh = sqrt(npower*db2pow(thresh));
+% [pks,range_detect] = findpeaks(pulsint(datacube,'noncoherent'),...
+%     'MinPeakHeight',thresh,'SortStr','descend');
+% range_estimate = rangebins(range_detect(2));
+% ts = datacube(range_detect(1),:).';
+% [Pxx,F] = periodogram(ts,[],256,prf,'centered');
+% % plot(F,10*log10(Pxx))
+% 
+% [Y,I] = max(Pxx);
+% lambda = physconst('LightSpeed')/fc;
+% tgtspeed = dop2speed(F(I)/2,lambda);
+% % fprintf('Estimated range of the target is %4.2f km.\n',...
+% %     range_estimate/1e3)
+% fprintf('Estimated target speed is %3.1f m/sec.\n',tgtspeed)
 %% 
 % Display the data cube containing signals per pulse.
 % figure
@@ -224,26 +237,32 @@ rangedopresp = phased.RangeDopplerResponse('SampleRate',fs, ...
 matchingcoeff = getMatchedFilter(waveform);
 [rngdopresp,rnggrid,dopgrid] = rangedopresp(datacube,matchingcoeff);
 
-im = imagesc(dopgrid,rnggrid,mag2db(abs(rngdopresp)));
-set(gca,'XTick',[], 'YTick', [])
+% im = imagesc(dopgrid,rnggrid,mag2db(abs(rngdopresp)));
+% %set(gca,'XTick',[], 'YTick', [])
 % xlabel('Velocity (m/s)')
 % ylabel('Range (m)')
 % colorbar
- ylim([min(tgt.pos)-1e4 max(tgt.pos)+1e4])
+% ylim([min(tgt.pos)-1e4 max(tgt.pos)+1e4])
 % axis xy
 
 fprintf('Using PW%d\n',pwNum)
 
 % Write the file image output
-rdFile = fullfile(path,'images','rd');
-saveas(gcf,rdFile,'png')
-img = im2double(imread('rd.png'));
-grayImage = rgb2gray(img);
-J = imresize(grayImage,'OutputSize',[64,64]);  % Should I use a down sampling technique?
-imshow(J)
-saveas(gcf,rdFile,'png')
+% rdFile = fullfile(path,'images','rd');
+% saveas(gcf,rdFile,'png')
+% img = im2double(imread('rd.png'));
+% grayImage = rgb2gray(img);
+% J = imresize(grayImage,'OutputSize',[64,64]);  % Should I use a down sampling technique?
+% imshow(J)
+% saveas(gcf,rdFile,'png')
 
 %% 
+
+cbf.rangeDopplerResponse(datacube,matchingcoeff)
+% cbf.rangeDopplerCuts(datacube,matchingcoeff)
+cbf.rangeCut(datacube,matchingcoeff)
+
+
 % Because the targets lie along the positive _x_-axis, positive velocity in 
 % the global coordinate system corresponds to negative closing speed. Negative 
 % velocity in the global coordinate system corresponds to positive closing speed.
