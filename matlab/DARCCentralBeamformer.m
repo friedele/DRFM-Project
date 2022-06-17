@@ -77,7 +77,7 @@ classdef DARCCentralBeamformer < handle
                 'RangeLoss',2*fspl(range_gates,lambda),...
                 'ReferenceLoss',2*fspl(prop_speed/(o.PRF*2),lambda));
             
-            y = tvg(y);
+        %    y = tvg(y);
             
             % Compute the Doppler response
             resp = fftshift(fft(y, o.slowTimePaddingFactor*numRows, 2),2);

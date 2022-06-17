@@ -9,7 +9,7 @@
 % (PRI) of 7.0 μs and a duty cycle of 2%. The operating frequency is 77 GHz and 
 % the sample rate is 150 MHz.
 
-fs = 100e6;
+fs = 10e6;
 c = physconst('LightSpeed');
 fc = 9.0e9;
 pri = 0.00031;
@@ -21,12 +21,12 @@ prf = 1/pri;
 % 20, and 40 m/s. All three targets have a nonfluctuating radar cross-section 
 % (RCS) of 10 dB. Create the target and radar platforms.
 
-Numtgts = 3;
-tgtpos = zeros(Numtgts);
-tgtpos(1,:) = [20e3 25e3 30e3];
+Numtgts = 1;
+tgtpos = zeros(3,Numtgts);
+tgtpos(1,:) = 0e3 ;
 tgtvel = zeros(3,Numtgts);
-tgtvel(1,:) = [0 0 0];
-tgtrcs = db2pow(10)*[1 1 1];
+tgtvel(1,:) = 600 ;
+tgtrcs = db2pow(10)*10;
 tgtmotion = phased.Platform(tgtpos,tgtvel);
 target = phased.RadarTarget('PropagationSpeed',c,'OperatingFrequency',fc, ...
     'MeanRCS',tgtrcs);
@@ -46,7 +46,7 @@ rxantenna = clone(txantenna);
 bw = fs/2;
 waveform = phased.LinearFMWaveform('SampleRate',fs, ...
     'PRF',prf,'OutputFormat','Pulses','NumPulses',1,'SweepBandwidth',fs/2, ...
-    'DurationSpecification','Duty cycle','DutyCycle',0.02);
+    'DurationSpecification','Duty cycle','DutyCycle',0.25);
 sig = waveform();
 Nr = length(sig);
 bwrms = bandwidth(waveform)/sqrt(12);
@@ -55,9 +55,9 @@ rngrms = c/bwrms;
 % Set up the transmitter and radiator System object properties. The peak output 
 % power is 10 W and the transmitter gain is 36 dB.
 
-peakpower = 450e3;
-txgain = 120.0;
-txgain = 136.0;
+peakpower = 45e3;
+txgain = 50.0;
+txgain = 50.0;
 transmitter = phased.Transmitter( ...
     'PeakPower',peakpower, ...
     'Gain',txgain, ...
@@ -105,7 +105,7 @@ receiver = phased.ReceiverPreamp( ...
 % # Receive the signal at the radar.
 % # Load the signal into the data cube.
 
-Np = 128;
+Np = 64;
 dt = pri;
 cube = zeros(Nr,Np);
 for n = 1:Np

@@ -9,12 +9,11 @@
 % (PRI) of 7.0 μs and a duty cycle of 2%. The operating frequency is 77 GHz and 
 % the sample rate is 150 MHz.
 
-fs = 1e6;
+fs = 50e6;
 c = physconst('LightSpeed');
-fc = 9.5e9;
-prf = 25;
-pri = 1/prf;
-
+fc = 9.0e9;
+pri = 0.00031;
+prf = 1/pri;
 %% 
 % Set up the scenario parameters. The transmitter and receiver are stationary 
 % and located at the origin. The targets are 500, 530, and 750 meters from the 
@@ -22,12 +21,12 @@ pri = 1/prf;
 % 20, and 40 m/s. All three targets have a nonfluctuating radar cross-section 
 % (RCS) of 10 dB. Create the target and radar platforms.
 
-Numtgts = 3;
-tgtpos = zeros(Numtgts);
-tgtpos(1,:) = [1000e3 2000e3 3000e3];
+Numtgts = 1;
+tgtpos = zeros(3,Numtgts);
+tgtpos(1,:) = 20e3 ;
 tgtvel = zeros(3,Numtgts);
-tgtvel(1,:) = [0 0 0];
-tgtrcs = db2pow(10)*[1 1 1];
+tgtvel(1,:) = 100 ;
+tgtrcs = db2pow(10)*10;
 tgtmotion = phased.Platform(tgtpos,tgtvel);
 target = phased.RadarTarget('PropagationSpeed',c,'OperatingFrequency',fc, ...
     'MeanRCS',tgtrcs);
@@ -56,9 +55,9 @@ rngrms = c/bwrms;
 % Set up the transmitter and radiator System object properties. The peak output 
 % power is 10 W and the transmitter gain is 36 dB.
 
-peakpower = 450e3;
-txgain = 60.0;
-txgain = 60.0;
+peakpower = 45e3;
+txgain = 50.0;
+txgain = 50.0;
 transmitter = phased.Transmitter( ...
     'PeakPower',peakpower, ...
     'Gain',txgain, ...
@@ -82,7 +81,7 @@ collector = phased.Collector( ...
     'Sensor',rxantenna, ...
     'PropagationSpeed',c, ...
     'OperatingFrequency',fc);
-rxgain = 60.0;
+rxgain = 42.0;
 noisefig = 1;
 receiver = phased.ReceiverPreamp( ...
     'SampleRate',fs, ...
@@ -106,7 +105,7 @@ receiver = phased.ReceiverPreamp( ...
 % # Receive the signal at the radar.
 % # Load the signal into the data cube.
 
-Np = 128;
+Np = 64;
 dt = pri;
 cube = zeros(Nr,Np);
 for n = 1:Np
@@ -179,6 +178,9 @@ detidx = NaN(2,Numtgts);
 tgtrng = rangeangle(tgtpos,radarpos);
 tgtspd = radialspeed(tgtpos,tgtvel,radarpos,radarvel);
 tgtdop = 2*speed2dop(tgtspd,c/fc);
+
+fprintf ('Target Vel (m/s) (x-axis): %.2f\n',tgtspd);
+fprintf ('Doppler Shift (Hz) (x-axis): %.2f\n',tgtdop);
 for m = 1:numel(tgtrng)
     [~,iMin] = min(abs(rnggrid-tgtrng(m)));
     detidx(1,m) = iMin;
@@ -193,11 +195,12 @@ ind = sub2ind(size(noise),detidx(1,:),detidx(2,:));
 % Estimate the range and range variance at the detection locations. The estimated 
 % ranges agree with the postulated ranges.
 
-[rngest,rngvar] = rangeestimator(rngdopresp,rnggrid,detidx,noise(ind))
+%[rngest,rngvar] = rangeestimator(rngdopresp,rnggrid,detidx,noise(ind))
 %% 
 % Estimate the speed and speed variance at the detection locations. The estimated 
 % speeds agree with the predicted speeds.
 
-[spdest,spdvar] = dopestimator(rngdopresp,dopgrid,detidx,noise(ind))
+%[spdest,spdvar] = 
+dopestimator(rngdopresp,dopgrid,detidx,noise(ind))
 %% 
 % _Copyright 2012 The MathWorks, Inc._
