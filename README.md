@@ -1,7 +1,7 @@
 # DRFM
  <h1 align="center">
   <a href="https://github.com/dec0dOS/amazing-github-template">
-    <img src="images/tmpImage.png" alt="Logo" width="125" height="125">
+    <img src="https://github.com/friedele/DRFM-Project/blob/Development/images/combined2_targets_RD.png" alt="Logo" width="325" height="325">
   </a>
 </h1>
 
