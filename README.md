@@ -33,9 +33,9 @@
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Usage](#usage)
-    - [Cookiecutter template](#cookiecutter-template)
+    - [template](#example-template)
     - [Manual setup](#manual-setup)
-    - [Variables reference](#variables-reference)
+    - [Variables reference]
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Support](#support)
@@ -65,9 +65,7 @@ We propose to design a CNN that will use both temporal and spatial training data
 <summary>Additional info</summary>
 <br>
 
-This project is the result of huge research. I'm a long-time GitHub user so I've seen more than [7.3k](https://github.com/dec0dOS?tab=stars) READMEs so far. I've started writing docs for my open source projects (that are currently in their early stages so they exist in the private space for now). After I've analyzed many popular GitHub READMEs and other GitHub-related docs and features I've tried to create a general-propose template that may be useful for any project.
-
-Of course, no template will serve all the projects since your needs may be different. So [Cookiecutter](https://github.com/cookiecutter/cookiecutter) comes to the rescue. It allows [Jinja template language](https://jinja.palletsprojects.com) to be used for complex cases. Just enter up the project preferences you want in the Cookiecutter interactive menu and that's it. There is a manual setup that could be useful for your existing projects (or if you don't want to use Cookiecutter for some reason). **This README.md file is not a template itself**, you should [download the precompiled template](https://github.com/dec0dOS/amazing-github-template/releases/download/latest/template.zip) and replace the predefined values, then remove unused sections.
+This project is the result of huge research. 
 
 </details>
 
@@ -79,29 +77,17 @@ Of course, no template will serve all the projects since your needs may be diffe
 
 ### Prerequisites
 
-The recommended method to install **Amazing GitHub Template** is by using [Cookiecutter](https://github.com/cookiecutter/cookiecutter). For manual install please refer to [manual setup section](#manual-setup).
-
-The easiest way to install Cookiecutter is by running:
+The recommended method to install 
 
 ```sh
-pip install --user cookiecutter
+This will give you the large highlight bar
 ```
 
 For other install options, please refer to [Cookiecutter installation manual](https://cookiecutter.readthedocs.io/en/latest/installation.html).
 
 ### Usage
 
-#### Cookiecutter template
 
-After installing Cookiecutter, all you need to do is to run the following command:
-
-```sh
-cookiecutter gh:dec0dOS/amazing-github-template
-```
-
-You will get an interactive prompt where you'll specify relevant options for your project (or the default value will be used).
-
-![Preview](docs/images/preview.svg)
 
 #### Manual setup
 
@@ -119,8 +105,6 @@ Please follow these steps for manual setup:
 
 Please note that entered values are case-sensitive.
 Default values are provided as an example to help you figure out what should be entered.
-
-> On manual setup, you need to replace only values written in **uppercase**.
 
 | Name                       | Default value      | Description                                                                 |
 | -------------------------- | ------------------ | --------------------------------------------------------------------------- |
@@ -145,7 +129,7 @@ Default values are provided as an example to help you figure out what should be 
 | use_conventional_commits   | y                  | Add [Conventional Commits](https://www.conventionalcommits.org) notice      |
 | use_github_discussions     | n                  | Use [GitHub Discussions](https://docs.github.com/en/discussions/quickstart) |
 
-> NOTICE: to use GitHub Discussions, you have to [enable it first](https://docs.github.com/en/discussions/quickstart).
+> NOTICE: Grays out the text.
 
 ## Roadmap
 
