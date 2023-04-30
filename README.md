@@ -8,9 +8,9 @@
 <div align="center">
   <br />
   <br />
-  <a href="https://github.com/friedele/DRFM_Project//issues/new?assignees=&labels=bug&template=01_BUG_REPORT.md&title=bug%3A+">Report a Bug</a>
+  <a href="https://github.com/friedele/DRFM-Project/issues/new?assignees=&labels=bug&template=01_BUG_REPORT.md&title=bug%3A+">Report a Bug</a>
   ·
-  <a href="https://github.com/friedele/DRFM_Project/issues/new?assignees=&labels=enhancement&template=02_FEATURE_REQUEST.md&title=feat%3A+">Request a Feature</a>
+  <a href="https://github.com/friedele/DRFM-Project/issues/new?assignees=&labels=enhancement&template=02_FEATURE_REQUEST.md&title=feat%3A+">Request a Feature</a>
   .
   <a href="https://github.com/friedele/DRFM_Project/discussions">Ask a Question</a>
 </div>
@@ -133,7 +133,7 @@ Default values are provided as an example to help you figure out what should be 
 
 ## Roadmap
 
-See the [open issues](https://github.com/dec0dOS/amazing-github-template/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/friedele/DRFM-Project/issues) for a list of proposed features (and known issues).
 
 - [Top Feature Requests](https://github.com/dec0dOS/amazing-github-template/issues?q=label%3Aenhancement+is%3Aopen+sort%3Areactions-%2B1-desc) (Add your votes using the 👍 reaction)
 - [Top Bugs](https://github.com/dec0dOS/amazing-github-template/issues?q=is%3Aissue+is%3Aopen+label%3Abug+sort%3Areactions-%2B1-desc) (Add your votes using the 👍 reaction)
@@ -153,7 +153,7 @@ Please try to create bug reports that are:
 
 Reach out to the maintainer at one of the following places:
 
-- [GitHub discussions](https://github.com/dec0dOS/amazing-github-template/discussions)
+- [GitHub discussions](https://github.com/friedele/DRFM-Project/discussions)
 - The email which is located [in GitHub profile](https://github.com/friedele)
 
 ## License
@@ -166,4 +166,5 @@ See [LICENSE](LICENSE) for more information.
 
 Resources that were used during the development of the **DRFM-Project**:
 
-- <https://github.com/cookiecutter/cookiecutter>
+- <https://pytorch.org>
+- <https://pytorch.org/hub/pytorch_vision_resnet>
