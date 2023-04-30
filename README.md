@@ -75,13 +75,6 @@ Of course, no template will serve all the projects since your needs may be diffe
 </tr>
 </table>
 
-### Built With
-
-- [GitHub Flavored Markdown Spec](https://github.github.com/gfm/)
-- [Cookiecutter](https://github.com/cookiecutter/cookiecutter)
-- [GitHub Actions](https://github.com/features/actions)
-- [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli)
-
 ## Getting Started
 
 ### Prerequisites
@@ -120,7 +113,7 @@ Please follow these steps for manual setup:
 
     `or`
 
-    Move the necessary files from precompiled template folder to your existing project directory. Don't forget the `.github` directory that may be hidden by default in your operating system
+    Move the necessary files from precompiled template folder to your existing project directory. Don't forget the `use backticks to get this type of display` directory that may be hidden by default in your operating system
 
 #### Variables reference
 
@@ -164,7 +157,6 @@ See the [open issues](https://github.com/dec0dOS/amazing-github-template/issues)
 
 ## Contributing
 
-First off, thanks for taking the time to contribute! Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make will benefit everybody else and are **greatly appreciated**.
 
 Please try to create bug reports that are:
 
@@ -173,16 +165,12 @@ Please try to create bug reports that are:
 - _Unique._ Do not duplicate existing opened issues.
 - _Scoped to a Single Bug._ One bug per report.
 
-Please adhere to this project's [code of conduct](docs/CODE_OF_CONDUCT.md).
-
-You can use [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli) to check for common markdown style inconsistency.
-
 ## Support
 
 Reach out to the maintainer at one of the following places:
 
 - [GitHub discussions](https://github.com/dec0dOS/amazing-github-template/discussions)
-- The email which is located [in GitHub profile](https://github.com/dec0dOS)
+- The email which is located [in GitHub profile](https://github.com/friedele)
 
 ## License
 
@@ -192,26 +180,6 @@ See [LICENSE](LICENSE) for more information.
 
 ## Acknowledgements
 
-Thanks for these awesome resources that were used during the development of the **Amazing GitHub template**:
+Resources that were used during the development of the **DRFM-Project**:
 
 - <https://github.com/cookiecutter/cookiecutter>
-- <https://github.github.com/gfm/>
-- <https://tom.preston-werner.com/2010/08/23/readme-driven-development.html>
-- <https://changelog.com/posts/top-ten-reasons-why-i-wont-use-your-open-source-project>
-- <https://thoughtbot.com/blog/how-to-write-a-great-readme>
-- <https://www.makeareadme.com>
-- <https://github.com/noffle/art-of-readme>
-- <https://github.com/noffle/common-readme>
-- <https://github.com/RichardLitt/standard-readme>
-- <https://github.com/matiassingers/awesome-readme>
-- <https://github.com/LappleApple/feedmereadmes>
-- <https://github.com/othneildrew/Best-README-Template>
-- <https://github.com/mhucka/readmine>
-- <https://github.com/badges/shields>
-- <https://github.com/cjolowicz/cookiecutter-hypermodern-python>
-- <https://github.com/stevemao/github-issue-templates>
-- <https://github.com/devspace/awesome-github-templates>
-- <https://github.com/cezaraugusto/github-template-guidelines>
-- <https://github.com/frenck?tab=repositories>
-- <https://docs.github.com/en/discussions/quickstart>
-- <https://docs.github.com/en/actions>
