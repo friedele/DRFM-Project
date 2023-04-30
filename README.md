@@ -1,12 +1,11 @@
 # DRFM
  <h1 align="center">
   <a href="https://github.com/dec0dOS/amazing-github-template">
-    <img src="{{cookiecutter.repo_slug}}/docs/images/logo.svg" alt="Logo" width="125" height="125">
+    <img src="images/tmpImage.png" alt="Logo" width="125" height="125">
   </a>
 </h1>
 
 <div align="center">
-  Amazing GitHub Template - Sane defaults for your next project!
   <br />
   <br />
   <a href="https://github.com/dec0dOS/amazing-github-template/issues/new?assignees=&labels=bug&template=01_BUG_REPORT.md&title=bug%3A+">Report a Bug</a>
@@ -53,25 +52,14 @@
 <tr>
 <td>
 
-Open Source Software is not about the code in the first place but the communications and community. People love good documentation and obvious workflows. If your software solves some problem, but nobody can figure out how to use it or, for example, how to create an effective bug report, there's something very bad going on. Did you hear about Readme Driven Development? Check out the awesome [article written by GitHub co-founder Tom Preston-Werner](https://tom.preston-werner.com/2010/08/23/readme-driven-development.html).
+Radar electronic jammers are evolving from hostile nations thus becoming more complex and present serious issues when a radar system is trying to interrogate the actual targets of interest. Electronic jammers that present a serious challenge are in a class called Digital Radio Frequency Memory (DRFM).  DRFM techniques work by generating coherent false targets to the radar receiver based on an intercepted pulse signal from the radar transmitter. This will position false targets either ahead or behind the actual radar target, thus masking the real target with false targets.  The false targets can also be manipulated in amplitude, phase and frequency.
 
-There are many great README or issues templates available on GitHub, however, you have to find them yourself and combine different templates yourself. In addition, if you want extensive docs like CODE_OF_CONDUCT.md, CONTRIBUTING.md, SECURITY.md or even advanced GitHub features like a pull request template, additional labels, code scanning, and automatic issue/PR closing and locking you have to do much more work. Your time should be focused on creating something **amazing**. You shouldn't be doing the same tasks over and over like creating your GitHub project template from scratch. Follow the **don’t repeat yourself** principle. Use a template **and go create something amazing**!
+Traditional approaches to target detection and estimation for electronic jammers in general, rely on parametric modeling, that can fail because it violates the strict assumptions of classical signal processing algorithms. The result is substantial algorithm performance degradation. Furthermore parametric models to handle DRFM jammers are difficult to design and ineffective against an evolving DRFM technology.   The key to identifying opportunities for improved electronic jammer protection and signal processing in radars is to use machine learning techniques to challenge the underlying assumptions of the standard parametric approach for the design and analysis of radar systems. 
 
-Key features of **Amazing GitHub Template**:
+Convolutional Neural Networks (CNN) have gained popularity in the last few years with the advent of faster high performance computer systems which rely GPUs for the best computational performance.  A CNN operates from a mathematical perspective and is used for non-trivial tasks such as image classification. CNN's have great performance while classifying images when they are very similar to the training dataset. However little work as been done in developing realistic radar models which are ignoring radar environmental and antenna effects thus providing inaccurate simulation training datasets and credibility.  In addition, current public available research does not typically consider the five dimensions of a radar sensor, thus presenting an incomplete signal processing chain. From a first principles perspective the radar measures the following aspects of a signal target return:  Range, azimuth, elevation, Doppler, and signal amplitude. 
 
-- Configurable README.md template
-- Configurable LICENSE template
-- Configurable CODE_OF_CONDUCT.md template
-- Configurable CONTRIBUTING.md template
-- Configurable SECURITY.md template
-- Configurable issues template
-- Pull request template
-- CODEOWNERS template
-- Additional labels template
-- Automatic locking for closed issues and PRs workflow
-- Automatic cleaning for stale issues and PRs workflow
-- Automatic label verification for PRs workflow
-- Automatic security code scanning workflow via CodeQL
+We propose to design a CNN that will use both temporal and spatial training datasets, where the radar signal processing with respect to DRFM jamming will be examined to identify and classify DRFM type jammers.  The CNN will use raw uncompressed In-phase and Quadrature (IQ) time series data and range-doppler maps as inputs to classify if our ground based phased array radar system is being jammed by DRFM false targets.   A suitable network architecture and values for hyperparameters are found by iterative experimental studies. The final classification accuracy objective will be 95 percent or better. This achieved accuracy suggests that CNNs can be used to detect radar DRFM jamming with good results and thus allowing a radar system to decide on any further actions to mitigate a DRFM jammer attack.
+
 
 <details open>
 <summary>Additional info</summary>
