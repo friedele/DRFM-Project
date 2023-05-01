@@ -1,0 +1,1 @@
+pyrun('C:\Users\friedele\Repos\DRFM\python\model_prediction.py')
