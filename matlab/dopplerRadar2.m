@@ -166,7 +166,7 @@ end
 t = (0:nSamples-1)';
 fsignal = 0.01;
 x = sin(2*pi*fsignal*t);
-tWin = taylorwin(nSamples,4,-40);
+tWin = taylorwin(nSamples,4,-40); % Assume a nominal Talyor window as -40 dB
 scaleFactor = 2;
 %% Loop through the integrated number of pulses
 
