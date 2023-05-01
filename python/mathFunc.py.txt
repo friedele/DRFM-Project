@@ -1,3 +1,0 @@
-def mySqRt(x)
-	y=x*x
-        return y
