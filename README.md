@@ -28,14 +28,8 @@
 <details open="open">
 <summary>Table of Contents</summary>
 
-- [About](#about)
-  - [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Usage](#usage)
-    - [template](#example-template)
-    - [Manual setup](#manual-setup)
-    - [Variables reference]
+- [Abstract](#abstract)
+- [Problem Overview](#problem-overview)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Support](#support)
@@ -46,7 +40,7 @@
 
 ---
 
-## About
+## Abstract
 
 <table>
 <tr>
@@ -73,63 +67,19 @@ This project is the result of ongoing research.
 </tr>
 </table>
 
-## Getting Started
+## Problem Overview
+Ideally, radar signal processing should be able to accurately and efficiently detect false or misleading targets of interest.  The reality is that typical radar signal processing is ineffective against false targets produced by deceptive electronic jammers such as DRFM. Traditional approaches to target detection and track estimation for electronic countermeasures (ECM) in general, rely on parametric modeling, that can fail because it violates the strict assumptions of classical signal processing algorithms.  ECM, in general, attempts to interfere with or deceive the radar system with misleading electronic signals.  This failure occurs because the misleading signals and the real targets are processed in the same way as the output of the analog-to-digital converter, thus the false targets and real targets are mixed together.  The result is substantial algorithm performance degradation in both target detection and track performance.  The matched filter (see section 2.3.3) which optimizes the SNR for detection processing does not identify false targets.  The outcome of this shortcoming is that false targets are passed through to the point of detection processing (see Figure 1.1), which then can pollute the tracker and further task scheduling of radar resources towards the misleading signals. We argue that if we can identify the misleading signals, then the radar can take steps to mitigate or cancel the ECM. We also propose to identify that we have misleading signals before processing the detections, thus saving the radar from unnecessary computing cycles to process the false targets and prevent overall algorithm performance degradation. 
 
-### Prerequisites
+We propose to use machine learning techniques to challenge the underlying assumptions of the standard parametric approach for the design and analysis of radar systems.  Convolutional Neural Networks (CNN) have gained popularity in the last few years with the advent of faster high-performance Graphics Processing Unit (GPU) computers.  Current research demonstrates CNN as a sound approach for radar signal classification with more work to be done.  We will show a Convolutional Neural Network (CNN) that will use spatial training datasets in the form of range-Doppler images to perform radar signal classification.  The radar signal processing will then be examined to identify different ECM classes. The goal is to show that ECM can be mitigated and thus improve overall radar performance operation and target recognition. We focus on a particular type of active ECM called Digital Radio Frequency Memory (DRFM).  We choose to focus on the DRFM jammer because it’s the most problematic ECM for radars to date.
 
-The recommended method to install 
+Success is defined by the identification of an ECM, in this case, a DRFM jammer, and its type via the CNN model.  The new CNN model is proposed to be part of the radar’s signal processing chain.  The DRFM jammer will fail to affect radar detection and tracking operations in the radar.  Identification is the first step in mitigating the effects of ECM.
 
-```sh
-This will give you the large highlight bar
-```
+The status quo is the failure to identify false targets or interference is what we face today since DRFM is problematic for typical signal processing.  The failure effects are as follows:
 
-For other install options, please refer to [Cookiecutter installation manual](https://cookiecutter.readthedocs.io/en/latest/installation.html).
+ - Impact on system performance due to more signal processing operations
+ - Degrades detection performance 
+ - Hides the real targets, deceiving the Tracker
 
-### Usage
-
-
-
-#### Manual setup
-
-Please follow these steps for manual setup:
-
-1. [Download the precompiled template](https://github.com/dec0dOS/amazing-github-template/releases/download/latest/template.zip)
-2. Replace all the [variables](#variables-reference) to your desired values
-3. Initialize the repo in the precompiled template folder
-
-    `or`
-
-    Move the necessary files from precompiled template folder to your existing project directory. Don't forget the `use backticks to get this type of display` directory that may be hidden by default in your operating system
-
-#### Variables reference
-
-Please note that entered values are case-sensitive.
-Default values are provided as an example to help you figure out what should be entered.
-
-| Name                       | Default value      | Description                                                                 |
-| -------------------------- | ------------------ | --------------------------------------------------------------------------- |
-| PROJECT_NAME               | My Amazing Project | Your project name                                                           |
-| REPO_SLUG                  | my-amazing-project | Repo slug must match the GitHub repo URL slug part                          |
-| GITHUB_USERNAME            | dec0dOS            | Your GitHub username **without @**                                          |
-| FULL_NAME                  | Alexey Potapov     | Your full name                                                              |
-| OPEN_SOURCE_LICENSE        | MIT license        | Full OSS license name                                                       |
-| modern_header              | y                  | Use HTML to prettify your header                                            |
-| table_in_about             | n                  | Use table to wrap around About section                                      |
-| include_logo               | y                  | Include Logo section. Only valid when `modern_header == y`          |
-| include_badges             | y                  | Include section for badges                                                  |
-| include_toc                | y                  | Include Table of Contents                                                   |
-| include_screenshots        | y                  | Include Screenshots section                                                 |
-| include_project_assistance | y                  | Include Project assistance section                                          |
-| include_authors            | y                  | Include Authors & contributors section                                      |
-| include_security           | y                  | Include Security section and SECURITY.md file                               |
-| include_acknowledgements   | y                  | Include Acknowledgements section                                            |
-| include_code_of_conduct    | y                  | Include CODE_OF_CONDUCT.md file                                             |
-| include_workflows          | y                  | Include .github/workflows directory                                         |
-| use_codeql                 | y                  | Use [CodeQL](https://securitylab.github.com/tools/codeql/)                  |
-| use_conventional_commits   | y                  | Add [Conventional Commits](https://www.conventionalcommits.org) notice      |
-| use_github_discussions     | n                  | Use [GitHub Discussions](https://docs.github.com/en/discussions/quickstart) |
-
-> NOTICE: Grays out the text.
 
 ## Roadmap
 
