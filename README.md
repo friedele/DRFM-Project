@@ -65,7 +65,7 @@ We propose to design a CNN that will use spatial training datasets, where the ra
 <summary>Additional info</summary>
 <br>
 
-This project is the result of huge research. 
+This project is the result of ongoing research. 
 
 </details>
 
